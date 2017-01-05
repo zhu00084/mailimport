@@ -5,18 +5,26 @@ import java.util.Date;
 
 public class BugTraqMail implements Serializable {
 	private static final long serialVersionUID = 1L;
-	public String subject;
-	public String msgid;
-        public String from;
-	public Date date;
-	public String body = "";
+	private String subject;
+	private String msgid;
+	private String from;
+	private Date receivedDate;
+	private String body = "";
+	/**
+	 * Stores message index in the Inbox starting from 1.
+	 * This index will be saved in a non-unique column in database. 
+	 * The deletion of any mail in the Inbox will cause duplicate number in this column.  
+	 */
+	private int mailIndex;
 	
+	
+
 	public BugTraqMail(String subject, String msgId, String from, Date receivedDate, String body){
 		
 		this.subject = subject;
 		this.msgid = msgId;
 		this.from = from;
-		this.date = receivedDate;
+		this.receivedDate = receivedDate;
 		this.body = body;
 		
 		
@@ -46,12 +54,12 @@ public class BugTraqMail implements Serializable {
 		this.from = from;
 	}
 
-	public Date getDate() {
-		return date;
+	public Date getReceivedDate() {
+		return receivedDate;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setReceivedDate(Date date) {
+		this.receivedDate = date;
 	}
 
 	public String getBody() {
@@ -60,6 +68,14 @@ public class BugTraqMail implements Serializable {
 
 	public void setBody(String body) {
 		this.body = body;
+	}
+	
+	public int getMailIndex() {
+		return mailIndex;
+	}
+
+	public void setMailIndex(int mailIndex) {
+		this.mailIndex = mailIndex;
 	}
 	
 

@@ -66,24 +66,32 @@ public class MysqlDatabase extends Database {
 	}
 
 	@Override
-	protected boolean Import(Connection conn, ArrayList<BugTraqMail> mails) {
+	protected boolean Import(Connection conn, ArrayList<BugTraqMail> mails)
+	{
 		
+		// mysql insert statement
+		String query = "insert into ossindex_t (MailIndex,MsgID, MailSubject, Sender,  Date, MailContent)"
+		+ " values (?, ?, ?, ?, ?, ?)";// create the mysql insert preparedstatement
+		
+		PreparedStatement preparedStmt;
+		
+		try {
+			preparedStmt = conn.prepareStatement(query);
+		} catch (SQLException e1) {
+			slf4jLogger.error(e1.toString());
+			return false;
+		}	
+		
+		int paramIndex = 0;
 		for (int j = 0; j < mails.size(); j++) {
-
-			// the mysql insert statement
-			String query = " insert into ossindex_t (MsgID, MailSubject, Sender,  Date, MailContent)"
-					+ " values (?, ?, ?, ?, ?)";
-
-			// create the mysql insert preparedstatement
-			PreparedStatement preparedStmt;
+			paramIndex = 1;
 			try {
-				preparedStmt = conn.prepareStatement(query);			
-				
-				preparedStmt.setString(1, mails.get(j).msgid);
-				preparedStmt.setString(2, mails.get(j).subject);
-				preparedStmt.setString(3, mails.get(j).from);
-				preparedStmt.setTimestamp(4, new Timestamp(mails.get(j).date.getTime()));
-				preparedStmt.setString(5, mails.get(j).body);
+				preparedStmt.setInt(paramIndex++, mails.get(j).getMailIndex());
+				preparedStmt.setString(paramIndex++, mails.get(j).getMsgid());
+				preparedStmt.setString(paramIndex++, mails.get(j).getSubject());
+				preparedStmt.setString(paramIndex++, mails.get(j).getFrom());
+				preparedStmt.setTimestamp(paramIndex++, new Timestamp(mails.get(j).getReceivedDate().getTime()));
+				preparedStmt.setString(paramIndex++, mails.get(j).getBody());
 
 				preparedStmt.execute();
 			

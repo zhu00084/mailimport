@@ -14,14 +14,14 @@ public class OssMailImport {
 		@Override
 		public int compare(BugTraqMail mail1, BugTraqMail mail2) {
 
-			return mail1.date.compareTo(mail2.date);
+			return mail1.getReceivedDate().compareTo(mail2.getReceivedDate());
 		}
 
 	}
 
 	public static void main(String[] args) {
 
-		slf4jLogger.info("*********Start mail import*********");
+		LogImportStartMessage(slf4jLogger);
 
 		// read from config file
 		OssConfiguration oc = new OssConfiguration();
@@ -47,10 +47,10 @@ public class OssMailImport {
 		}
 
 		if (nextMailIndex <= 0)
-
 		{
-			slf4jLogger.info("Invalid Mail Index");
+			slf4jLogger.info("Invalid Mail Index. Please ensure NextMailIndex (>0) exists in ossimportinfo_t table.");
 			slf4jLogger.info("Stop Mail Import.");
+			LogImportEndMessage(slf4jLogger);
 			System.exit(0);
 		}
 		
@@ -81,8 +81,19 @@ public class OssMailImport {
 			slf4jLogger.info("Failed updateing NextMailIndex in OssImportInfo table");
 		}
 
-		slf4jLogger.info("---------End mail import---------");
+		LogImportEndMessage(slf4jLogger);
 
 	}
+	
+	public static void LogImportEndMessage(Logger logger)
+	{
+		logger.info("----------End Mail Import----------");		
+	}
+	
+	public static void LogImportStartMessage(Logger logger)
+	{
+		logger.info("**********Start Mail Import**********");		
+	}
+	
 
 }

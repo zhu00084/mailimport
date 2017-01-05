@@ -155,6 +155,9 @@ public class OssMailClient {
 							mmsg.getMessageID().toString(), mmsg.getFrom()[0].toString(),
 							mmsg.getReceivedDate(), mmsg.getContent().toString());
 
+					//set correct mail index in the mailbox
+					mail.setMailIndex(nextMailIndex + i);
+					
 					mails.add(mail);
 					
 					i++;
